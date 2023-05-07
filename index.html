@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ML Audio Visual</title>
+    <link rel="stylesheet" href="src/style.css" />
+  </head>
+  <body>
+    <div class="wrapper" id="wrapper">
+      <div class="box" id="pos_box">
+        <div id="pos_indicator"></div>
+      </div>
+      <div id="faderbox_el"></div>
+
+      <div class="menu">
+        <div>
+          <button id="add_data">add data</button>
+          <button id="remove_data">remove data</button>
+          <button id="train">train</button>
+        </div>
+        <div class="info_box">
+          <span>collected data: <span id="collected_data">0</span></span>
+          <span>model status: <span id="model_status"></span></span>
+          <span>progress: <span id="training_progress"></span></span>
+          <span>audio: <span id="audio_status">off</span></span>
+        </div>
+        <div>
+          <button id="start_audio">toggle audio</button>
+          <button id="show_settings">settings</button>
+          <!-- <button id="show_info">info</button> -->
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="src/script.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,170 @@
+*,
+html {
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root {
+  --max-width: 350px;
+}
+
+input {
+  accent-color: rgb(70, 58, 58);
+  margin: 5px;
+}
+
+button {
+  background-color: transparent;
+  border: 2px solid;
+  font-weight: bold;
+  font-size: 0.75rem;
+  padding: 5px;
+  flex: 0;
+  cursor: pointer;
+}
+
+.box {
+  display: flex;
+  width: 100%;
+  max-width: var(--max-width);
+  aspect-ratio: 1 / 1;
+  flex-direction: column;
+  border: 1px dashed black;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+.faderbox {
+  width: 100%;
+  max-width: var(--max-width);
+  height: 125px;
+  border: 1px dashed black;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.fader-wrapper {
+  height: 100%;
+  width: 15px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fader-position {
+  position: absolute;
+  width: 10px;
+  aspect-ratio: 1 / 1;
+  border-radius: 100%;
+  border: 2px solid;
+  background-color: rgb(70, 58, 58);
+  z-index: 99;
+}
+
+.fader-line {
+  height: 100%;
+  position: absolute;
+  width: 2px;
+  background-color: black;
+}
+
+.box button {
+  cursor: pointer;
+  margin: 5px;
+  width: 100%;
+}
+
+.slider-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+#pos_indicator {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid;
+  border-radius: 100%;
+  background-color: rgb(70, 58, 58);
+}
+
+.wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto 0 auto;
+  gap: 20px;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  max-width: var(--max-width);
+}
+
+.menu div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info_box {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.menu div span {
+  font-size: 0.65rem;
+}
+
+.settings {
+  margin: 20px auto 20px auto;
+  width: var(--max-width);
+  border: 1px dashed;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 10px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.form_row {
+  display: flex;
+  padding: 1px 50px;
+  justify-content: space-between;
+}
+
+.form_row input,
+.form_row select {
+  width: 100px;
+  background-color: transparent;
+  border: none;
+  accent-color: black;
+  border: 1px solid;
+  font-size: 1rem;
+  padding: 5px;
+  margin: 5px;
+}
+
+.form_row input:focus {
+  outline: none;
+}
