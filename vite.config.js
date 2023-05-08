@@ -1,3 +1,4 @@
+/** @type {import('vite').UserConfig} */
 export default {
   server: {
     port: process.env.PORT || 3000,
