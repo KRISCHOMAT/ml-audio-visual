@@ -2,20 +2,22 @@ import Faderbox from "./classes/faderbox.js";
 import Synth from "./classes/synth.js";
 import * as tf from "@tensorflow/tfjs";
 
-/**
- * Synth
- */
-
-const outputBox: HTMLElement = <HTMLElement>(
-  document.getElementsByTagName("BODY")[0]
-);
 const audioStatus: HTMLElement = <HTMLElement>(
   document.getElementById("audio_status")
 );
 const startAudio: HTMLButtonElement = <HTMLButtonElement>(
   document.getElementById("start_audio")
 );
+const addData: HTMLButtonElement = <HTMLButtonElement>(
+  document.getElementById("add_data")
+);
+const removeData: HTMLButtonElement = <HTMLButtonElement>(
+  document.getElementById("remove_data")
+);
 
+/**
+ * Synth
+ */
 const synth = new Synth();
 
 startAudio.addEventListener("click", () => {
@@ -36,17 +38,11 @@ startAudio.addEventListener("click", () => {
 /**
  * ML
  */
-const addData: HTMLButtonElement = <HTMLButtonElement>(
-  document.getElementById("add_data")
-);
-const removeData: HTMLButtonElement = <HTMLButtonElement>(
-  document.getElementById("remove_data")
-);
+
 const faderboxEl: HTMLElement = <HTMLElement>(
   document.getElementById("faderbox_el")
 );
-
-const faderbox = new Faderbox(faderboxEl, synth, styleBackground);
+const faderbox = new Faderbox(faderboxEl, synth);
 
 let inputData: number[][] = [];
 let outputData: number[][] = [];
@@ -72,7 +68,7 @@ const modelStatus: HTMLElement = <HTMLElement>(
 );
 
 synth.setParams(faderbox.values);
-styleBackground(faderbox.values);
+faderbox.styleBackground(faderbox.values);
 loadPretrainedModel();
 
 async function loadPretrainedModel() {
@@ -137,7 +133,7 @@ function trackMovement(mouseX: number, mouseY: number) {
       for (let i = 0; i < data.length; i++) {
         recentOutputs[i] = data[i];
       }
-      styleBackground(recentOutputs);
+      faderbox.styleBackground(recentOutputs);
       synth.setParams(recentOutputs);
       faderbox.setValues(recentOutputs);
     });
@@ -233,17 +229,4 @@ function logProgress(epoch: number, logs: any) {
     LEARNING_RATE -= 0.005;
     OPTIMIZER.setLearningRate(LEARNING_RATE);
   }
-}
-
-function styleBackground(recentOutputs: number[]) {
-  outputBox.style.backgroundImage = `
-        linear-gradient(
-          ${recentOutputs[0] * 360}deg,
-          rgb(${recentOutputs[1] * 255},${recentOutputs[2] * 255},${
-    recentOutputs[3] * 255
-  }),
-          rgb(${recentOutputs[4] * 255},${recentOutputs[5] * 255},${
-    recentOutputs[6] * 255
-  })
-        )`;
 }

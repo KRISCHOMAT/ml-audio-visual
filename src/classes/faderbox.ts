@@ -1,3 +1,5 @@
+import Synth from "./synth";
+
 class Fader {
   id: number;
   container: HTMLElement;
@@ -102,14 +104,14 @@ export default class Faderbox {
   box: HTMLElement;
   faders: Fader[] = [];
   values: number[] = [];
-  synth: any; // replace 'any' with the actual type of 'synth'
-  stylebackground: any; // replace 'any' with the actual type of 'stylebackground'
+  synth: Synth;
+  outputBox: HTMLElement;
 
-  constructor(box: HTMLElement, synth: any, stylebackground: any) {
+  constructor(box: HTMLElement, synth: any) {
     this.box = box;
     this.box.classList.add("faderbox");
     this.synth = synth;
-    this.stylebackground = stylebackground;
+    this.outputBox = document.getElementsByTagName("BODY")[0] as HTMLElement;
 
     for (let i = 0; i < 7; i++) {
       const fader = new Fader(i, this.box, this.getValue.bind(this));
@@ -121,7 +123,7 @@ export default class Faderbox {
   getValue(v: number, id: number): void {
     this.values[id] = v;
     this.synth.setParams(this.values);
-    this.stylebackground(this.values);
+    this.styleBackground(this.values);
   }
 
   setValues(values: number[]): void {
@@ -129,5 +131,14 @@ export default class Faderbox {
       this.faders[i].setValue(values[i]);
       this.values[i] = values[i];
     }
+  }
+
+  styleBackground(values: number[]) {
+    this.outputBox.style.backgroundImage = `
+        linear-gradient(
+          ${values[0] * 360}deg,
+          rgb(${values[1] * 255},${values[2] * 255},${values[3] * 255}),
+          rgb(${values[4] * 255},${values[5] * 255},${values[6] * 255})
+        )`;
   }
 }
