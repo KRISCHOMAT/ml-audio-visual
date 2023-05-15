@@ -84,6 +84,7 @@ export default class PosBox {
         (e.touches[0].clientX - this.posRect.left) / this.posRect.width;
       this.mouseY =
         (e.touches[0].clientY - this.posRect.top) / this.posRect.height;
+      this.#trackMovement();
     };
 
     // click events
