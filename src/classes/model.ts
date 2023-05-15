@@ -54,6 +54,7 @@ export default class Model {
   }
 
   prepareTraining(inputData: number[][], outputData: number[][]) {
+    if (inputData.length === 0) return;
     this.isTrained = false;
     this.trainProgress.innerHTML = "0%";
     this.modelStatus.innerHTML = "preparing training";

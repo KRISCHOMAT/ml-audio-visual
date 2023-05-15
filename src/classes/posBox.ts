@@ -48,6 +48,43 @@ export default class PosBox {
 
     this.#addEventListeners();
 
+    this.model.loadPretrainedModel(this.#trackMovement.bind(this));
+  }
+
+  #addEventListeners() {
+    // touch events
+    this.posBoxEl.ontouchstart = (e: TouchEvent) => {
+      this.isTracking = true;
+      this.#handleTouch(e);
+    };
+
+    this.posBoxEl.ontouchend = () => {
+      this.isTracking = false;
+    };
+
+    this.posBoxEl.ontouchcancel = () => {
+      this.isTracking = false;
+    };
+
+    this.posBoxEl.ontouchmove = (e: TouchEvent) => {
+      this.#handleTouch(e);
+    };
+
+    // click events
+    this.posBoxEl.onmousedown = (e: MouseEvent) => {
+      this.isTracking = true;
+      this.#handleClick(e);
+    };
+
+    this.posBoxEl.onmouseup = () => {
+      this.isTracking = false;
+    };
+
+    this.posBoxEl.onmousemove = (e: MouseEvent) => {
+      this.#handleClick(e);
+    };
+
+    // menu events
     this.addDataButton.onclick = () => {
       this.collectData(this.mouseX, this.mouseY, this.faderbox);
     };
@@ -58,50 +95,6 @@ export default class PosBox {
 
     this.trainButton.onclick = () => {
       this.model.prepareTraining(this.inputData, this.outputData);
-    };
-
-    this.model.loadPretrainedModel(this.#trackMovement.bind(this));
-  }
-
-  #addEventListeners() {
-    // touch events
-    this.posBoxEl.ontouchstart = () => {
-      this.isTracking = true;
-    };
-
-    this.posBoxEl.ontouchend = () => {
-      this.isTracking = false;
-    };
-
-    this.posBoxEl.ontouchcancel = () => {
-      this.posBoxEl.ontouchend;
-    };
-
-    this.posBoxEl.ontouchmove = (e: TouchEvent) => {
-      e.preventDefault();
-      if (!this.isTracking) return;
-      this.mouseX =
-        (e.touches[0].clientX - this.posRect.left) / this.posRect.width;
-      this.mouseY =
-        (e.touches[0].clientY - this.posRect.top) / this.posRect.height;
-      this.#trackMovement();
-    };
-
-    // click events
-    this.posBoxEl.onmousedown = () => {
-      this.isTracking = true;
-    };
-
-    this.posBoxEl.onmouseup = () => {
-      this.isTracking = false;
-    };
-
-    this.posBoxEl.onmousemove = (e: MouseEvent) => {
-      e.preventDefault();
-      if (!this.isTracking) return;
-      this.mouseX = (e.clientX - this.posRect.left) / this.posRect.width;
-      this.mouseY = (e.clientY - this.posRect.top) / this.posRect.height;
-      this.#trackMovement();
     };
   }
 
@@ -115,6 +108,24 @@ export default class PosBox {
     this.outputData = [];
     this.inputData = [];
     this.collectedData.innerHTML = String(this.outputData.length);
+  }
+
+  #handleTouch(e: TouchEvent) {
+    e.preventDefault();
+    if (!this.isTracking) return;
+    this.mouseX =
+      (e.touches[0].clientX - this.posRect.left) / this.posRect.width;
+    this.mouseY =
+      (e.touches[0].clientY - this.posRect.top) / this.posRect.height;
+    this.#trackMovement();
+  }
+
+  #handleClick(e: MouseEvent) {
+    e.preventDefault();
+    if (!this.isTracking) return;
+    this.mouseX = (e.clientX - this.posRect.left) / this.posRect.width;
+    this.mouseY = (e.clientY - this.posRect.top) / this.posRect.height;
+    this.#trackMovement();
   }
 
   async #trackMovement() {

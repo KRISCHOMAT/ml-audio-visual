@@ -95,7 +95,7 @@ class Osc {
           clearInterval(this.glideInterval);
         }
       },
-      this.values == null ? 10 : (this.values.glideTime.value as number)
+      this.values == null ? 0 : (this.values.glideTime.value as number)
     );
   }
 
@@ -118,7 +118,7 @@ class Osc {
           clearInterval(this.glideInterval);
         }
       },
-      this.values == null ? 10 : (this.values.glideTime.value as number)
+      this.values == null ? 0 : (this.values.glideTime.value as number)
     );
   }
 
@@ -191,10 +191,12 @@ export default class Synth {
 
   setParams(params: number[]) {
     if (params.length <= 0) return;
+
     this.LPF.frequency.setValueAtTime(
       params[params.length - 1] * 300 + 100,
       this.audioContext.currentTime
     );
+
     for (let i = 0; i < this.oscs.length; i++) {
       this.oscs[i].setPitch(params[i]);
       this.oscs[i].setLFO(params[i + 3]);
