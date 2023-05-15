@@ -77,6 +77,7 @@ class Osc {
   setPitch(data: number) {
     const index = Math.floor(data * (this.scale.length - 1));
     const newPitch = this.#calculateFrequency(this.scale[index]);
+
     if (this.glideInterval) {
       clearInterval(this.glideInterval);
     }
@@ -189,11 +190,11 @@ export default class Synth {
   }
 
   setParams(params: number[]) {
+    if (params.length <= 0) return;
     this.LPF.frequency.setValueAtTime(
       params[params.length - 1] * 300 + 100,
       this.audioContext.currentTime
     );
-
     for (let i = 0; i < this.oscs.length; i++) {
       this.oscs[i].setPitch(params[i]);
       this.oscs[i].setLFO(params[i + 3]);

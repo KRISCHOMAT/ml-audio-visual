@@ -7,22 +7,33 @@ export default class PosBox {
   posRect: DOMRect;
   posIndicator: HTMLElement;
   isTracking: boolean;
-  mouseX: number = Math.random();
-  mouseY: number = Math.random();
+  mouseX: number;
+  mouseY: number;
   model: Model;
   faderbox: Faderbox;
   synth: Synth;
   addDataButton: HTMLButtonElement;
   removeDataButton: HTMLButtonElement;
+  trainButton: HTMLButtonElement;
+
+  collectedData: HTMLElement;
   inputData: number[][] = [];
   outputData: number[][] = [];
+  logging: any;
 
   constructor(model: Model, faderbox: Faderbox, synth: Synth) {
     this.addDataButton = document.getElementById(
       "add_data"
     ) as HTMLButtonElement;
+
     this.removeDataButton = document.getElementById(
       "remove_data"
+    ) as HTMLButtonElement;
+
+    this.trainButton = document.getElementById("train") as HTMLButtonElement;
+
+    this.collectedData = document.getElementById(
+      "collected_data"
     ) as HTMLButtonElement;
 
     this.posBoxEl = document.getElementById("pos_box") as HTMLElement;
@@ -32,14 +43,24 @@ export default class PosBox {
     this.model = model;
     this.faderbox = faderbox;
     this.synth = synth;
+    this.mouseX = Math.random();
+    this.mouseY = Math.random();
 
     this.#addEventListeners();
+
     this.addDataButton.onclick = () => {
       this.collectData(this.mouseX, this.mouseY, this.faderbox);
     };
+
     this.removeDataButton.onclick = () => {
       this.removeData();
     };
+
+    this.trainButton.onclick = () => {
+      this.model.prepareTraining(this.inputData, this.outputData);
+    };
+
+    this.model.loadPretrainedModel(this.#trackMovement.bind(this));
   }
 
   #addEventListeners() {
@@ -67,11 +88,11 @@ export default class PosBox {
 
     // click events
     this.posBoxEl.onmousedown = () => {
-      this.posBoxEl.ontouchstart;
+      this.isTracking = true;
     };
 
     this.posBoxEl.onmouseup = () => {
-      this.posBoxEl.ontouchend;
+      this.isTracking = false;
     };
 
     this.posBoxEl.onmousemove = (e: MouseEvent) => {
@@ -79,47 +100,39 @@ export default class PosBox {
       if (!this.isTracking) return;
       this.mouseX = (e.clientX - this.posRect.left) / this.posRect.width;
       this.mouseY = (e.clientY - this.posRect.top) / this.posRect.height;
+      this.#trackMovement();
     };
   }
 
   collectData(mouseX: number, mouseY: number, faderbox: Faderbox): void {
     this.outputData.push(faderbox.values);
     this.inputData.push([mouseX, mouseY]);
+    this.collectedData.innerHTML = String(this.outputData.length);
   }
 
   removeData() {
     this.outputData = [];
     this.inputData = [];
+    this.collectedData.innerHTML = String(this.outputData.length);
   }
 
-  //   #trackMovement() {
-  //     if (
-  //       this.mouseX >= 1 ||
-  //       this.mouseX <= 0 ||
-  //       this.mouseY >= 1 ||
-  //       this.mouseY <= 0
-  //     )
-  //       return;
-  //     this.posIndicator.style.left = `${this.mouseX * 100}%`;
-  //     this.posIndicator.style.top = `${this.mouseY * 100}%`;
+  async #trackMovement() {
+    if (
+      this.mouseX >= 1 ||
+      this.mouseX <= 0 ||
+      this.mouseY >= 1 ||
+      this.mouseY <= 0
+    )
+      return;
 
-  //     if (!this.isTrained) return;
-  //     const inputTensor = tf.tensor2d([[this.mouseX, this.mouseY]]);
+    this.posIndicator.style.left = `${this.mouseX * 100}%`;
+    this.posIndicator.style.top = `${this.mouseY * 100}%`;
 
-  //     const recentOutputs: number[] = [];
+    if (!this.model.isTrained) return;
 
-  //     model
-  //       .predict(inputTensor)
-  //       .data()
-  //       .then((data: number[]) => {
-  //         for (let i = 0; i < data.length; i++) {
-  //           recentOutputs[i] = data[i];
-  //         }
-  //         faderbox.styleBackground(recentOutputs);
-  //         synth.setParams(recentOutputs);
-  //         faderbox.setValues(recentOutputs);
-  //       });
+    const output = await this.model.predictValues(this.mouseX, this.mouseY);
 
-  //     inputTensor.dispose();
-  //   }
+    this.faderbox.styleBackground(output);
+    this.faderbox.setValues(output);
+  }
 }

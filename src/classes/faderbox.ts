@@ -107,8 +107,8 @@ export default class Faderbox {
   synth: Synth;
   outputBox: HTMLElement;
 
-  constructor(box: HTMLElement, synth: any) {
-    this.box = box;
+  constructor(synth: any) {
+    this.box = document.getElementById("faderbox_el") as HTMLElement;
     this.box.classList.add("faderbox");
     this.synth = synth;
     this.outputBox = document.getElementsByTagName("BODY")[0] as HTMLElement;
@@ -128,8 +128,9 @@ export default class Faderbox {
 
   setValues(values: number[]): void {
     for (let i = 0; i < values.length; i++) {
-      this.faders[i].setValue(values[i]);
+      this.faders[i].setValue(1 - values[i]);
       this.values[i] = values[i];
+      this.synth.setParams(this.values);
     }
   }
 

@@ -38,11 +38,11 @@ export default class Settings {
     this.settings = {
       lfo: {
         min: new SettingElement("LFO min", 1),
-        max: new SettingElement("LFO max", 5),
+        max: new SettingElement("LFO max", 1000),
       },
-      osc: new SettingElement("Base FQ", 200),
+      osc: new SettingElement("Base FQ", 440),
       oscType: new SettingElement("OSC Type", "sawtooth"),
-      glideTime: new SettingElement("Glide Time", 10),
+      glideTime: new SettingElement("Glide Time", 0),
     };
 
     this.settingsArray = [
@@ -85,8 +85,6 @@ export default class Settings {
     });
 
     this.settingsArray.forEach((setting) => {
-      console.log(setting);
-
       const formRow: HTMLDivElement = document.createElement("div");
       const label: HTMLParagraphElement = document.createElement("p");
       formRow.classList.add("form_row");
